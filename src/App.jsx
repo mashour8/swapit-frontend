@@ -48,6 +48,7 @@ function App() {
         {isAdmin && isLogedIn ? (
           <Routes>
             <Route path="/admin/products" element={<AdminProductsPage />} />
+            
           </Routes>
         ) : null}
       </div>
