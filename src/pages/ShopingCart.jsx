@@ -148,7 +148,7 @@ const ShopingCart = () => {
               </div>
               <hr className="" />
             </div>
-            
+
             <div className="ml-4 p-8 bg-[#FBF6F2] flex flex-col col-span-1 w-full">
               <h1 className="font-normal text-2xl">Order Summary</h1>
               <hr className="mt-4" />

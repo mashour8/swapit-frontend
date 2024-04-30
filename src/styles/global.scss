@@ -1,5 +1,4 @@
 @import './variables.scss';
-
 * {
     margin: 0; 
     padding: 0; 
@@ -14,21 +13,16 @@ a{
 .app{
     font-family: "Inter" , sans-serif;
     // font-family: "SofiaPro" , sans-serif;
-    
     // background-color: $main-bg;
     // display: flex;
     // flex-direction: column;
     height: 100vh;
-    
-    
     .main{
         padding: 20px 58px;
-        
     }
 }
 
 .log{
-    
 // position: absolute;
 // top: 0; 
 // right: 0; 

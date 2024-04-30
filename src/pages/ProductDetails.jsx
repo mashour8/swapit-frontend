@@ -61,7 +61,7 @@ const ProductDetails = () => {
 
   return (
     <div className="container grid grid-cols-3 gap-4">
-      <div className="grid gap-4 grid-cols-1 md:grid-cols-2 gap-4 col-span-2 p-12">
+      <div className="grid gap-4 grid-cols-1 md:grid-cols-2 col-span-2 p-12">
         <div>
           <img
             className="h-auto max-w-full rounded-lg"
