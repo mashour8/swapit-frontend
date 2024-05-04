@@ -20,8 +20,8 @@ class ProductsService {
     return this.api.post("/api/products", requestBody);
   };
 
-  getAllProducts = () => {
-    return this.api.get("/api/products");
+  getAllProducts = (LIMIT, offset) => {
+    return this.api.get(`/api/products?limit=${LIMIT}&offset=${offset}`);
   };
 
   getProduct = (id) => {

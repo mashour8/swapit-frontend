@@ -2,11 +2,11 @@ import SideBar from "../../components/admin/components/SideBar";
 import { SidebarItem } from "../../components/admin/components/SidebarItem";
 import {
   LifeBuoy,
-  Receipt,
+  ScanBarcode,
   Boxes,
   Package,
   UserCircle,
-  BarChart3,
+  PencilRuler,
   LayoutDashboard,
   Settings,
 } from "lucide-react";
@@ -20,13 +20,21 @@ const AdminNavbar = () => {
         path={"dashboard"}
       />
       <SidebarItem
-        icon={<BarChart3 size={20} />}
+        icon={<ScanBarcode size={20} />}
         text="Products"
         path={"products"}
       />
       <SidebarItem icon={<Package size={20} />} text="Orders" path={"#"} />
-      <SidebarItem icon={<Boxes size={20} />} text="Inventory" path={"#"} />
-      <SidebarItem icon={<Receipt size={20} />} text="Billings" path={"#"} />
+      <SidebarItem
+        icon={<Boxes size={20} />}
+        text="Categories"
+        path={"categories"}
+      />
+      <SidebarItem
+        icon={<PencilRuler size={20} />}
+        text="Sizes"
+        path={"sizes"}
+      />
       <hr className="my-3" />
       <SidebarItem
         icon={<UserCircle size={20} />}

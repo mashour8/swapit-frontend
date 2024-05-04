@@ -20,8 +20,8 @@ class CategoriesService {
     return this.api.post("/api/categories", requestBody);
   };
 
-  getAllCategory = () => {
-    return this.api.get("/api/categories");
+  getAllCategory = (LIMIT, offset) => {
+    return this.api.get(`/api/categories?limit=${LIMIT}&offset=${offset}`);
   };
 
   getCategory = (id) => {
