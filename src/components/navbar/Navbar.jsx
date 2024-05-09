@@ -16,8 +16,8 @@ const Navbar = () => {
   console.log("draftOrder : ", draftOrder);
 
   const getUser = () => {
-    authService.user(user.email).then(async (response) => {
-      await setBadgeCounter(response.data.draftOrder.products.length);
+    authService.user(user.email).then((response) => {
+      setBadgeCounter(response.data.draftOrder.products.length);
       console.log(
         "response.data.products",
         response.data.draftOrder.products.length
@@ -30,7 +30,6 @@ const Navbar = () => {
       getUser();
     } else {
       setBadgeCounter(0);
-      return;
     }
   }, [user]);
   return (
