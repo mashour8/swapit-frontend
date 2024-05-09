@@ -34,12 +34,18 @@ import OrderDetailsPage from "./pages/account/OrderDetailsPage";
 import ProductsAdminPage from "./pages/admin/ProductsAdminPage";
 import CategoriesAdminPage from "./pages/admin/CategoriesAdminPage";
 import SizesAdminPage from "./pages/admin/SizesAdminPage";
+import IsPrivate from "./components/others/IsPrivate";
+import IsAnon from "./components/others/IsAnon";
+import { useState } from "react";
 
 export const IsLogedInContext = createContext();
 
 function App() {
-  const isLogedIn = true;
-  const isAdmin = true;
+  const [selectedSize, setSelectedSize] = useState(null);
+  const [productId, setProductId] = useState(null);
+
+  const isLogedIn = false;
+  const isAdmin = false;
   return (
     <div className="app">
       {!isLogedIn && <Navbar></Navbar>}
@@ -65,32 +71,70 @@ function App() {
             <Route path="/hygiene" element={<HygienePage />} />
             <Route path="/maternity" element={<MaternityPage />} />
             <Route path="/contact" element={<ContactPage />} />
-            <Route path="/productDetails" element={<ProductDetails />} />
-            <Route path="/cart" element={<ShopingCart />} />
-            <Route path="/signUp" element={<SignUpPage />} />
+            <Route
+              path="/productDetails/:productId"
+              element={
+                <ProductDetails
+                  selectedSize={selectedSize}
+                  setSelectedSize={setSelectedSize}
+                  setProductId={setProductId}
+                />
+              }
+            />
+            <Route
+              path="/cart"
+              element={
+                <IsPrivate>
+                  <ShopingCart
+                    selectedSize={selectedSize}
+                    setSelectedSize={setSelectedSize}
+                    productId={productId}
+                  />
+                </IsPrivate>
+              }
+            />
+            <Route
+              path="/signUp"
+              element={
+                <IsAnon>
+                  <SignUpPage />
+                </IsAnon>
+              }
+            />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/category" element={<CategoryPage />} />
-
-            {isLogedIn ? (
-              <>
-                <Route
-                  path="/profile"
-                  element={<ProfilePage isLogedIn={isLogedIn} />}
-                />
-                <Route
-                  path="/orders"
-                  element={<OrderPage isLogedIn={isLogedIn} />}
-                />
-                <Route
-                  path="/orderDetails"
-                  element={<OrderDetailsPage isLogedIn={isLogedIn} />}
-                />
-                <Route
-                  path="/checkOut"
-                  element={<CheckOutPage isLogedIn={isLogedIn} />}
-                />
-              </>
-            ) : null}
+            <Route
+              path="/profile"
+              element={
+                <IsPrivate>
+                  <ProfilePage />
+                </IsPrivate>
+              }
+            />
+            <Route
+              path="/orders"
+              element={
+                <IsPrivate>
+                  <OrderPage />
+                </IsPrivate>
+              }
+            />
+            <Route
+              path="/orderDetails"
+              element={
+                <IsPrivate>
+                  <OrderDetailsPage />
+                </IsPrivate>
+              }
+            />
+            <Route
+              path="/checkOut"
+              element={
+                <IsPrivate>
+                  <CheckOutPage />
+                </IsPrivate>
+              }
+            />
           </Routes>
         </div>
       </div>

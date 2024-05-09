@@ -1,9 +1,23 @@
-import React, { useState } from "react";
+/* eslint-disable react/prop-types */
+import React, { useContext, useState } from "react";
 import { Link } from "react-router-dom";
+import draftServer from "../services/draft.service";
+import { AuthContext } from "../context/auth.context";
+import authService from "../services/users.service";
 
-const ShopingCart = () => {
+const ShopingCart = ({ selectedSize, productId }) => {
+  const { user, isLoggedIn, draftOrder } = useContext(AuthContext);
+
   const [quantity, setQuantity] = useState(1);
 
+  const handelSubmit = (e) => {
+    console.log("selectedSize", selectedSize);
+    console.log("productId", productId);
+  };
+
+  const getDraftOrder = () => {
+    draftServer.getDraft();
+  };
   const decrement = () => {
     if (quantity === 1) {
       return;
@@ -142,9 +156,6 @@ const ShopingCart = () => {
                 <div className="w-1/2">
                   <p>$12.00</p>
                 </div>
-                <div className="w-1/2">
-                  <p>Products</p>
-                </div>
               </div>
               <hr className="" />
             </div>
@@ -163,7 +174,11 @@ const ShopingCart = () => {
                 </p>
                 <p>$123.00</p>
               </div>
-              <button className="m-4 p-4 shadow-md bg-[#b7f088] rounded-md text-lg font-medium">
+              <button
+                type="submit"
+                onClick={handelSubmit}
+                className="m-4 p-4 shadow-md bg-[#b7f088] rounded-md text-lg font-medium"
+              >
                 Proceed To Checkout
               </button>
             </div>

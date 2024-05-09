@@ -24,6 +24,10 @@ class ProductsService {
     return this.api.get(`/api/products?limit=${LIMIT}&offset=${offset}`);
   };
 
+  // getAllProducts = (LIMIT, offset) => {
+  //   return this.api.get(`/api/products?limit=${LIMIT}&offset=${offset}`);
+  // };
+
   getProduct = (id) => {
     return this.api.get(`/api/products/${id}`);
   };

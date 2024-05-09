@@ -1,26 +1,52 @@
 import { Link } from "react-router-dom";
 import log from "../../assets/images/log.png";
-import user from "../../assets/images/icon-user.svg";
-import cart from "../../assets/images/icon-cart.svg";
-import search from "../../assets/images/icon-search.svg";
-
+import userIcon from "../../assets/images/icon-user.svg";
+import cartIcon from "../../assets/images/icon-cart.svg";
+import searchIcon from "../../assets/images/icon-search.svg";
+import { AuthContext } from "../../context/auth.context";
 import "./navbar.scss";
+import { useContext, useEffect, useState } from "react";
+import authService from "../../services/users.service";
 
 const Navbar = () => {
+  const { user, isLoggedIn, logOutUser, draftOrder } = useContext(AuthContext);
+  const [badgeCounter, setBadgeCounter] = useState(0);
+  console.log("isLoggedIn: ", isLoggedIn);
+  console.log("user navbar: ", user);
+  console.log("draftOrder : ", draftOrder);
+
+  const getUser = () => {
+    authService.user(user.email).then(async (response) => {
+      await setBadgeCounter(response.data.draftOrder.products.length);
+      console.log(
+        "response.data.products",
+        response.data.draftOrder.products.length
+      );
+      console.log("badge Counter: ", badgeCounter);
+    });
+  };
+  useEffect(() => {
+    if (user) {
+      getUser();
+    } else {
+      setBadgeCounter(0);
+      return;
+    }
+  }, [user]);
   return (
     <div className="main">
-      <header className="container mx-auto px-4 py-6 flex items-center justify-around">
+      <header className="container mx-auto px-4 flex items-center justify-around">
         <nav>
           <ul className="flex items-center justify-center font-semibold">
             <li className="relative group px-3 py-2">
-              <button className="hover:opacity-50 font-normal text-lg">
+              <Link to={"/"} className="hover:opacity-50 font-normal text-lg">
                 Home
-              </button>
+              </Link>
             </li>
             <li className="relative group px-3 py-2">
-              <button className="hover:opacity-50 cursor-default font-normal text-lg">
+              <Link className="hover:opacity-50 cursor-default font-normal text-lg">
                 In New
-              </button>
+              </Link>
               <div className="absolute top-0 -left-2 transition group-hover:translate-y-5 translate-y-0 opacity-0 invisible group-hover:opacity-100 group-hover:visible duration-500 ease-in-out group-hover:transform z-50 min-w-[260px] transform">
                 <div className="relative top-6 p-6 bg-white rounded-xl shadow-xl w-full">
                   <div className="w-10 h-10 bg-white transform rotate-45 absolute top-0 z-0 -translate-x-4 transition-transform group-hover:translate-x-3 duration-500 ease-in-out rounded-sm"></div>
@@ -222,7 +248,7 @@ const Navbar = () => {
               <form action="" className="relative">
                 <img
                   className="log p-1 absolute right-2 top-[10px] text-center "
-                  src={search}
+                  src={searchIcon}
                   alt=""
                 />
                 <input
@@ -234,44 +260,73 @@ const Navbar = () => {
             </div>
             <ul className="flex items-center justify-center font-semibold">
               <li className="relative group px-3 py-2">
-                <Link to={"/cart"}>
-                  <img src={cart} alt="" />
+                <Link to={"/cart"} className="relative inline-block">
+                  <img src={cartIcon} alt="" />
+                  <span className="absolute top-[-8px] right-[-4px] inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full">
+                    {badgeCounter}
+                  </span>
                 </Link>
               </li>
               <li className="relative group px-3 py-2">
                 <button>
-                  <img src={user} alt="" />
+                  <img src={userIcon} alt="" />
                 </button>
                 <div className="absolute top-0 -left-2 transition group-hover:translate-y-5 translate-y-0 opacity-0 invisible group-hover:opacity-100 group-hover:visible duration-500 ease-in-out group-hover:transform z-50 min-w-[160px] transform">
                   <div className="relative top-6 p-6 bg-white rounded-xl shadow-xl w-full">
                     <div className="w-10 h-10 bg-white transform rotate-45 absolute top-0 z-0 -translate-x-4 transition-transform group-hover:translate-x-3 duration-500 ease-in-out rounded-sm"></div>
                     <div className="relative z-10">
                       <ul className="mt-3 text-[15px]">
-                        <li>
-                          <Link
-                            to={"/profile"}
-                            className="bg-transparent bg-clip-text py-1 block hover:text-gray-500"
-                          >
-                            Profile
-                          </Link>
-                        </li>
-                        <li>
-                          <Link
-                            to={"/orders"}
-                            className="bg-transparent bg-clip-text py-1 block hover:text-gray-500"
-                          >
-                            Orders
-                          </Link>
-                        </li>
-                        <hr className="my-4" />
-                        <li>
-                          <a
-                            href="#"
-                            className="bg-transparent bg-clip-text text-gray-400 py-1 block hover:text-gray-500"
-                          >
-                            Logout
-                          </a>
-                        </li>
+                        {isLoggedIn && (
+                          <>
+                            <li>
+                              <Link
+                                to={"/profile"}
+                                className="bg-transparent bg-clip-text py-1 block hover:text-gray-500"
+                              >
+                                Profile
+                              </Link>
+                            </li>
+                            <li>
+                              <Link
+                                to={"/orders"}
+                                className="bg-transparent bg-clip-text py-1 block hover:text-gray-500"
+                              >
+                                Orders
+                              </Link>
+                            </li>
+                            <hr className="my-4" />
+                            <li>
+                              <Link
+                                to={"/login"}
+                                className="bg-transparent bg-clip-text text-gray-400 py-1 block hover:text-gray-500"
+                                onClick={logOutUser}
+                              >
+                                Logout
+                              </Link>
+                            </li>
+                          </>
+                        )}
+
+                        {!isLoggedIn && (
+                          <>
+                            <li>
+                              <Link
+                                to={"/signup"}
+                                className="bg-transparent bg-clip-text text-gray-400 py-1 block hover:text-gray-500"
+                              >
+                                SignUp
+                              </Link>
+                            </li>
+                            <li>
+                              <Link
+                                to={"/login"}
+                                className="bg-transparent bg-clip-text text-gray-400 py-1 block hover:text-gray-500"
+                              >
+                                Login
+                              </Link>
+                            </li>
+                          </>
+                        )}
                       </ul>
                     </div>
                   </div>
