@@ -24,8 +24,16 @@ const PopUpEditProduct = ({ handelEdit, productID }) => {
 
   const [categoriesList, setCategoriesList] = useState([]);
   const [selectedCategoriesList, setSelectedCategoriesList] = useState("");
+  let selectedSizes = null;
+  const [sizesList, setSizesList] = useState([
+    { name: "50/56", inStock: false },
+    { name: "62/68", inStock: false },
+    { name: "74/80", inStock: false },
+    { name: "86/92", inStock: false },
+    { name: "98/104", inStock: false },
+    { name: "116", inStock: false },
+  ]);
 
-  const [sizesList, setSizesList] = useState([]);
   const [selectedSizesList, setSelectedSizesList] = useState([]);
 
   const [selectedEssential, setSelectedEssential] = useState(false);
@@ -61,16 +69,48 @@ const PopUpEditProduct = ({ handelEdit, productID }) => {
   };
 
   const transformedSizesData = sizesList.map((size) => ({
-    value: size._id,
+    value: size.name,
     label: size.name,
+    inStock: size.inStock,
   }));
 
-  const reTransformedSizesData = selectedSizesList.map((size) => size.value);
+  const reTransformedSizesData = selectedSizesList.map((size) => ({
+    name: size.value,
+    inStock: true,
+  }));
 
   const transformedCategoriesData = categoriesList.map((category) => ({
     value: category._id,
     label: category.name,
   }));
+
+  function handleSizes(selectedOptions) {
+    // Update the selected sizes list
+    const updatedSelectedSizes = sizesList.map((size) => ({
+      name: size.name, // Set label
+      // value: size.name, // Set value
+      inStock: true, // Set inStock based on selection
+    }));
+
+    selectedSizes = updatedSelectedSizes;
+  }
+
+  const updateSizesList = (list) => {
+    console.log("sizesSelect before", reTransformedSizesData);
+    const updatedSizesList = sizesList.map((size) => {
+      const selectedItem = reTransformedSizesData.find(
+        (selectedItem) => selectedItem.name === size.name
+      );
+      if (selectedItem) {
+        console.log("selectedItem::::", selectedItem);
+        return { ...size, inStock: selectedItem.inStock ? true : false };
+      } else {
+        return size;
+      }
+    });
+    console.log("updatedSizesList", updatedSizesList);
+    selectedSizes = updatedSizesList;
+  };
 
   const getAllCategories = () => {
     categoriesServer
@@ -84,19 +124,19 @@ const PopUpEditProduct = ({ handelEdit, productID }) => {
       });
   };
 
-  const getAllSizes = () => {
-    sizesServer
-      .getAllSize(100, 0)
-      .then((response) => {
-        setSizesList(response.data.sizes);
-        console.log(response.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
+  // const getAllSizes = () => {
+  //   sizesServer
+  //     .getAllSize(100, 0)
+  //     .then((response) => {
+  //       setSizesList(response.data.sizes);
+  //       console.log(response.data);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // };
   useEffect(() => {
-    getAllSizes();
+    // getAllSizes();
     getAllCategories();
   }, []);
 
@@ -117,15 +157,15 @@ const PopUpEditProduct = ({ handelEdit, productID }) => {
         });
 
         const selectedSizes = product.sizes.map((sizeId) => ({
-          value: sizeId._id,
+          value: sizeId.name,
           label: sizeId.name,
         }));
 
         setSelectedSizesList(selectedSizes);
 
         setSelectedNew({
-          value: product.isNew,
-          label: product.isNew ? "True" : "False",
+          value: product.isNewProduct,
+          label: product.isNewProduct ? "True" : "False",
         });
         setSelectedEssential({
           value: product.isEssential,
@@ -140,15 +180,17 @@ const PopUpEditProduct = ({ handelEdit, productID }) => {
   }, [productId]);
 
   const handleAddNewPrduct = (e) => {
+    console.log("selectedSizes", selectedSizes);
+    updateSizesList(selectedSizes);
     e.preventDefault();
     const requestBody = {
       name,
       price,
       images: imageUrl,
       category: selectedCategoriesList.value,
-      sizes: reTransformedSizesData,
+      sizes: selectedSizes,
       description: description,
-      isNew: selectedNew.value,
+      isNewProduct: selectedNew.value,
       isSeason: selectedSeason.value,
       isEssential: selectedEssential.value,
     };

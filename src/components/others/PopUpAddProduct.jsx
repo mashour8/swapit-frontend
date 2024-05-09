@@ -36,7 +36,17 @@ const PopUpAddProduct = ({
   const [categoriesList, setCategoriesList] = useState([]);
   const [selectedCategoriesList, setSelectedCategoriesList] = useState("");
 
-  const [sizesList, setSizesList] = useState([]);
+  // const [sizesSelect, setSizesSelect] = useState([]);
+  let sizesSelect = null;
+
+  const [sizesList, setSizesList] = useState([
+    { name: "50/56", inStock: false },
+    { name: "62/68", inStock: false },
+    { name: "74/80", inStock: false },
+    { name: "86/92", inStock: false },
+    { name: "98/104", inStock: false },
+    { name: "116", inStock: false },
+  ]);
   const [selectedSizesList, setSelectedSizesList] = useState([]);
 
   const [selectedEssential, setSelectedEssential] = useState(false);
@@ -47,11 +57,14 @@ const PopUpAddProduct = ({
 
   const [description, setDescription] = useState("");
 
-  const [newProduct, setNewProduct] = useState(null);
-
-  // before adding the ids of the selected sizes , it must be renamed back to the orgian names
-
   const handleSelectedSize = (selectedOptions) => {
+    // Update the selected sizes list
+    // const updatedSelectedSizes = sizesList.map((size) => ({
+    //   label: size.name, // Set label
+    //   value: size.name, // Set value
+    //   inStock: selectedOptions.some((option) => option.value === size.name), // Set inStock based on selection
+    // }));
+
     setSelectedSizesList(selectedOptions);
   };
 
@@ -72,11 +85,18 @@ const PopUpAddProduct = ({
   };
 
   const transformedSizesData = sizesList.map((size) => ({
-    value: size._id,
+    value: size.name,
     label: size.name,
+    inStock: size.inStock,
   }));
 
-  const reTransformedSizesData = selectedSizesList.map((size) => size.value);
+  const reTransformedSizesData = selectedSizesList.map((size) => ({
+    // console.log("size: ", size);
+    // return { name: size.value, inStock: (size.inStock = true) };
+    name: size.value,
+    inStock: true,
+  }));
+
   const transformedCategoriesData = categoriesList.map((category) => ({
     value: category._id,
     label: category.name,
@@ -94,19 +114,19 @@ const PopUpAddProduct = ({
       });
   };
 
-  const getAllSizes = () => {
-    sizesServer
-      .getAllSize(100, 0)
-      .then((response) => {
-        setSizesList(response.data.sizes);
-        console.log(response.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
+  // const getAllSizes = () => {
+  //   sizesServer
+  //     .getAllSize(100, 0)
+  //     .then((response) => {
+  //       setSizesList(response.data.sizes);
+  //       console.log(response.data);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // };
   useEffect(() => {
-    getAllSizes();
+    // getAllSizes();
     getAllCategories();
   }, []);
 
@@ -115,29 +135,56 @@ const PopUpAddProduct = ({
     // console.log("selected categories", selectedCategoriesList);
   };
 
-  const handleAddNewPrduct = (e) => {
-    e.preventDefault();
-    const requestBody = {
-      name,
-      price,
-      images: imageUrl,
-      category: selectedCategoriesList.value,
-      sizes: reTransformedSizesData,
-      description: description,
-      isNew: selectedNew.value,
-      isSeason: selectedSeason.value,
-      isEssential: selectedEssential.value,
-    };
-    console.log("requestBody: ", requestBody);
+  const updateSizesList = (list) => {
+    console.log("sizesSelect before", reTransformedSizesData);
+    const updatedSizesList = sizesList.map((size) => {
+      const selectedItem = reTransformedSizesData.find(
+        (selectedItem) => selectedItem.name === size.name
+      );
+      if (selectedItem) {
+        console.log("selectedItem::::", selectedItem);
+        return { ...size, inStock: selectedItem.inStock ? true : false };
+      } else {
+        return size;
+      }
+    });
+    console.log("updatedSizesList", updatedSizesList);
+    sizesSelect = updatedSizesList;
+  };
 
-    productsServer
-      .createProduct(requestBody)
-      .then((response) => {
-        console.log(response);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+  const handleAddNewPrduct = async (e) => {
+    e.preventDefault();
+    console.log("reTransformedSizesData :", reTransformedSizesData);
+    // handleSizes(reTransformedSizesData);
+    updateSizesList(sizesSelect);
+    console.log("sizesSelect", sizesSelect);
+    console.log("sizesList : ", sizesList);
+    try {
+      const requestBody = {
+        name,
+        price,
+        images: imageUrl,
+        category: selectedCategoriesList.value,
+        sizes: sizesSelect,
+        description: description,
+        isNewProduct: selectedNew.value,
+        isSeason: selectedSeason.value,
+        isEssential: selectedEssential.value,
+      };
+
+      console.log("requestBody: ", requestBody);
+
+      productsServer
+        .createProduct(requestBody)
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } catch (error) {
+      console.error("Error creating product:", error);
+    }
   };
 
   const handleFileUpload = (e) => {

@@ -1,30 +1,29 @@
+/* eslint-disable react/prop-types */
 import { useEffect, useState } from "react";
 import newBadge from "../../assets/images/newBadge.png";
 import img1 from "../../assets/images/MARFL_IMAGE1_2560x2560.webp";
-const ItemSeasonCollections = () => {
-  const [products, setProducts] = useState({
-    id: 20,
-    imageSrc: { img1 },
-    imageAlt: "Qws",
-    href: "#",
-    name: "Cosy Dress and Leggings Set",
-    price: 13.5,
-    color: "green",
-  });
+import productsServer from "../../services/prodcuts.service";
+import { Link } from "react-router-dom";
+const ItemSeasonCollections = ({ LIMT, offSet }) => {
+  const [products, setProducts] = useState([]);
+
+  const getAllProduct = () => {
+    productsServer
+      .getAllProducts(LIMT, offSet)
+      .then((response) => {
+        const productsList = response.data.products;
+        setProducts(productsList);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+  const handleProductDetails = (id) => {};
   useEffect(() => {
-    // setProducts([
-    //   {
-    //     id: 20,
-    //     imageSrc:
-    //       "https://cdn.shopify.com/s/files/1/0082/9351/5349/products/PN2001W24_MARFL_IMAGE1_2560x2560.jpg?v=1710899966",
-    //     imageAlt: "Qws",
-    //     href: "#",
-    //     name: "Cosy Dress and Leggings Set",
-    //     price: 13.5,
-    //     color: "green",
-    //   },
-    // ]);
+    getAllProduct();
   }, []);
+
+  // console.log("Products :   ", products);
   return (
     // <div className="items">
     //   <div className="container">
@@ -46,35 +45,47 @@ const ItemSeasonCollections = () => {
     //     </div>
     //   </div>
     // </div>
-    <div className="bg-white">
+    <div className="bg-white m-10">
       <div className=" max-w-2xl lg:max-w-7xl">
         <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
-          <div key={12} className="group relative">
-            <img
-              src={newBadge}
-              alt=""
-              className="absolute top-0 right-0 w-1/5 hidden"
-            />
-            <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md lg:aspect-none group-hover:opacity-75 lg:h-80">
-              <img
-                src="https://cdn.shopify.com/s/files/1/0082/9351/5349/products/PN2001W24_MARFL_IMAGE1_2560x2560.jpg?v=1710899966"
-                alt="Wqw"
-                className="h-full w-full object-cover object-center lg:h-full lg:w-full border rounded-lg p-4 px-8"
-              />
-            </div>
-            <div className="mt-4 flex flex-col justify-between">
-              <div>
-                <h3 className="text-sm text-gray-700">
-                  <a href="#">
-                    <span aria-hidden="true" className="absolute inset-0 " />
-                    Cosy Dress and Leggings Set
-                  </a>
-                </h3>
-                <p className="mt-1 text-sm text-gray-500">Green</p>
-              </div>
-              <p className="text-sm font-medium text-gray-900 ">123,00</p>
-            </div>
-          </div>
+          {products &&
+            products.map((product) => (
+              <Link
+                to={`/productDetails/${product._id}`}
+                key={product._id}
+                className="group relative"
+                onClick={() => handleProductDetails()}
+              >
+                <img
+                  src={newBadge}
+                  alt=""
+                  className="absolute top-0 right-0 w-1/5 hidden"
+                />
+                <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md lg:aspect-none group-hover:opacity-75 lg:h-80">
+                  <img
+                    src={product.images[0]}
+                    alt=""
+                    className="h-full w-full object-cover object-center lg:h-full lg:w-full border rounded-lg p-4 px-8"
+                  />
+                </div>
+                <div className="mt-4 flex flex-col justify-between">
+                  <div>
+                    <h3 className="text-sm text-gray-700">
+                      <a href="#">
+                        <span aria-hidden="true" className="absolute inset-0" />
+                        {product.name}
+                      </a>
+                    </h3>
+                    <p className="mt-1 text-sm text-gray-500">
+                      {product.category.name}
+                    </p>
+                  </div>
+                  <p className="text-sm font-medium text-gray-900 ">
+                    ${product.price}
+                  </p>
+                </div>
+              </Link>
+            ))}
         </div>
       </div>
     </div>

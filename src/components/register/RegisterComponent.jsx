@@ -2,9 +2,9 @@ import { Link } from "react-router-dom";
 
 const RegisterComponent = () => {
   return (
-    <div className="registration-component bg-[#7b5f58] bg-opacity-80 flex justify-center flex-col items-center py-10">
+    <div className="registration-component bg-[#fbf6f2] bg-opacity-80 flex justify-center flex-col items-center py-10">
       <div className="container p-4  flex justify-center flex-col items-center w-dvw">
-        <h3 className="text-white text-2xl text-center">
+        <h3 className="text-black text-2xl text-center">
           Join Swapit Rewards today to receive quarterly vouchers, <br />
           exclusive offers, birthday rewards and more!
         </h3>
