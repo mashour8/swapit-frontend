@@ -214,7 +214,7 @@ const PopUpEditProduct = ({ handelEdit, productID }) => {
     });
 
     axios
-      .post("http://localhost:5005/api/upload", uploadData)
+      .post(`${import.meta.env.VITE_SERVER_URL}/api/upload`, uploadData)
       .then((response) => {
         setImageUrl([...imageUrl, ...response.data]);
       })
