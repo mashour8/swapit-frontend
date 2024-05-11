@@ -39,6 +39,7 @@ import IsAnon from "./components/others/IsAnon";
 import AboutPage from "./pages/AboutPage";
 import { useState, useContext } from "react";
 import { AuthContext } from "./context/auth.context";
+import FAQsPage from "./pages/FAQsPage";
 
 export const IsLogedInContext = createContext();
 
@@ -69,6 +70,7 @@ function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/clothes" element={<ClothesPage />} />
             <Route path="/about" element={<AboutPage />} />
+            <Route path="/faq" element={<FAQsPage />} />
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/travel" element={<TravelPage />} />
             <Route path="/toys" element={<ToysPage />} />
