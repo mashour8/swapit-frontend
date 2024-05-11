@@ -200,6 +200,7 @@ const PopUpAddProduct = ({
       })
       .catch((err) => console.log("Error while uploading the file: ", err));
   };
+  //a
   return (
     <div
       id="authentication-modal"
