@@ -29,7 +29,7 @@ const LoginPage = () => {
         console.log("response.data login page: ", response.data);
         localStorage.setItem("authToken", response.data.authToken);
         await authenticateUser();
-        navigate("/orders");
+        navigate("/admin/products");
       })
       // .then(() => {
       //   navigate("/orders");

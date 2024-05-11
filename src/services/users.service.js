@@ -27,14 +27,14 @@ class AuthService {
     // return axios.post("http://localhost:5005/auth/login");
   };
 
-  user = (requestBody) => {
-    return this.api.get("/auth/user", requestBody);
+  user = (id) => {
+    return this.api.get(`/auth/user/${id}`);
     // same as
     // return axios.post("http://localhost:5005/auth/login");
   };
 
-  updateUser = (requestBody) => {
-    return this.api.put("/auth/user", requestBody);
+  updateUser = (id, requestBody) => {
+    return this.api.put(`/auth/user/${id}`, requestBody);
     // same as
     // return axios.post("http://localhost:5005/auth/login");
   };

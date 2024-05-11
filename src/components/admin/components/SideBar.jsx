@@ -1,11 +1,20 @@
 /* eslint-disable react/prop-types */
-import { MoreVertical, ChevronLast, ChevronFirst, Link } from "lucide-react";
+import {
+  MoreVertical,
+  ChevronLast,
+  ChevronFirst,
+  Link,
+  LogOut,
+} from "lucide-react";
 import { createContext, useContext, useState } from "react";
 import logo from "../../../assets/images/log.png";
 import { IsLogedInContext } from "../../../App";
+import { AuthContext } from "../../../context/auth.context";
+
 export const SideBarContext = createContext();
 
 export default function SideBar({ children }) {
+  const { user, isLoggedIn, isAdmin, logOutUser } = useContext(AuthContext);
   const [expanded, setExpanded] = useState(true);
   const value = useContext(IsLogedInContext);
   // console.log("isLogedIn", value);
@@ -45,11 +54,14 @@ export default function SideBar({ children }) {
           `}
           >
             <div className="leading-4">
-              <h4 className="font-semibold">John Doe</h4>
-              <span className="text-xs text-gray-600">example@gmail.com</span>
+              <h4 className="font-semibold">{user.name}</h4>
+              <span className="text-xs text-gray-600">{user.email}</span>
             </div>
             <MoreVertical size={20} />
           </div>
+          <Link onClick={logOutUser} to={"/"}>
+            Logout
+          </Link>
         </div>
       </nav>
       {/* <div className="h-full w-full bg-slate-600">hello</div> */}

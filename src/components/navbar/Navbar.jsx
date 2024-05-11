@@ -11,26 +11,25 @@ import authService from "../../services/users.service";
 const Navbar = () => {
   const { user, isLoggedIn, logOutUser, draftOrder } = useContext(AuthContext);
   const [badgeCounter, setBadgeCounter] = useState(0);
-  console.log("isLoggedIn: ", isLoggedIn);
-  console.log("user navbar: ", user);
-  console.log("draftOrder : ", draftOrder);
 
   const getUser = () => {
-    authService.user(user.email).then((response) => {
-      setBadgeCounter(response.data.draftOrder.products.length);
-      console.log(
-        "response.data.products",
-        response.data.draftOrder.products.length
-      );
-      console.log("badge Counter: ", badgeCounter);
-    });
+    authService
+      .user(user._id)
+      .then((response) => {
+        console.log("usere dasd ", response.data);
+        if (response.data.draftOrder != null) {
+          setBadgeCounter(response.data.draftOrder.products.length);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
   useEffect(() => {
     if (user) {
       getUser();
-    } else {
-      setBadgeCounter(0);
     }
+    setBadgeCounter(0);
   }, [user]);
   return (
     <div className="main">

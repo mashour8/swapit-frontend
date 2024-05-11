@@ -166,16 +166,16 @@ const Footer = () => {
               Products
             </h6>
             <p className="mb-4">
-              <a href="#!">React</a>
+              <a href="#!">Essentials</a>
             </p>
             <p className="mb-4">
-              <a href="#!">React</a>
+              <a href="#!">Best Sellers</a>
             </p>
             <p className="mb-4">
-              <a href="#!">React</a>
+              <a href="#!">Season Collections</a>
             </p>
             <p>
-              <a href="#!">React</a>
+              <a href="#!">Babys</a>
             </p>
           </div>
           <div>
@@ -183,10 +183,10 @@ const Footer = () => {
               Useful links
             </h6>
             <p className="mb-4">
-              <a href="#!">About us</a>
+              <Link to={"/about"}>About us</Link>
             </p>
             <p className="mb-4">
-              <a href="#!">Contact Us</a>
+              <Link to={"contact"}>Contact Us</Link>
             </p>
             <p className="mb-4">
               <a href="#!">FAQs</a>

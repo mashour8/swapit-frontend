@@ -20,7 +20,7 @@ function AuthProviderWrapper(props) {
     // If the token exists in the localStorage
     if (storedToken) {
       // We must send the JWT token in the request's "Authorization" Headers
-      console.log("storedToken: ", storedToken);
+      // console.log("storedToken: ", storedToken);
       //why i'm getting here undefined????????????
       // .get(`${import.meta.env.SERVER_URL}/auth/verify`, {
 
@@ -29,10 +29,6 @@ function AuthProviderWrapper(props) {
           headers: { Authorization: `Bearer ${storedToken}` },
         })
         .then((response) => {
-          console.log(
-            "import.meta.env.SERVER_URL",
-            import.meta.env.VITE_SERVER_URL
-          );
           // If the server verifies that the JWT token is valid
           const userInfo = response.data;
           // Update state variables
@@ -42,6 +38,7 @@ function AuthProviderWrapper(props) {
           console.log("user: ", userInfo);
           setIsAdmin(userInfo.isAdmin);
           setDraftOrder(userInfo.draftOrder);
+          console.log("inside : authenticateUser :: ", userInfo.draftOrder);
         })
         .catch((error) => {
           // If the server sends an error response (invalid token)
