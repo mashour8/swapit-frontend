@@ -189,7 +189,7 @@ const Footer = () => {
               <Link to={"contact"}>Contact Us</Link>
             </p>
             <p className="mb-4">
-              <a href="#!">FAQs</a>
+              <Link to={"/faq"}>FAQs</Link>
             </p>
             <p>
               <a href="#!">Help</a>
