@@ -1,24 +1,48 @@
 /* eslint-disable react/prop-types */
 import { StarIcon } from "@heroicons/react/20/solid";
 import { RadioGroup } from "@headlessui/react";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import productsServer from "../services/prodcuts.service";
+import draftServer from "../services/draft.service";
+import { AuthContext } from "../context/auth.context";
+import authService from "../services/users.service";
 
 const ProductDetails = ({ selectedSize, setSelectedSize, setProductId }) => {
+  const { user, isLoggedIn, draftOrder, authenticateUser } =
+    useContext(AuthContext);
   const { productId } = useParams();
   const [oneProduct, setOneProduct] = useState(null);
+  const [draft, setDraft] = useState(null);
+  const [userInfo, setUserInfo] = useState(null);
 
   const navigate = useNavigate();
 
   const handelSubmit = () => {
-    setProductId(productId);
-    console.log("selectedSize", selectedSize);
     if (selectedSize === null) {
       return;
     }
+    updateCart();
     navigate("/cart");
   };
+
+  const getUser = () => {
+    if (!user) {
+      return;
+    }
+    const id = user._id;
+    authService
+      .user(id)
+      .then((response) => {
+        setUserInfo(response.data);
+        setDraft(response.data.draftOrder._id);
+        console.log("get user ", response.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   const getProduct = () => {
     productsServer
       .getProduct(productId)
@@ -29,24 +53,118 @@ const ProductDetails = ({ selectedSize, setSelectedSize, setProductId }) => {
         console.log(err);
       });
   };
-  // const getProduct = () => {
-  //   productsServer
-  //     .getProduct(productId)
-  //     .then((response) => {
-  //       setOneProduct(response.data);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  // };
 
-  console.log("product:   ? :", oneProduct);
+  const updateCart = () => {
+    console.log("draftdraftdraft", draft);
+    if (!draft) {
+      const body = {
+        userId: user._id,
+        products: [
+          {
+            productId: productId,
+            size: selectedSize.name,
+            quantity: 1,
+          },
+        ],
+        orderStatus: "Draft",
+      };
+      draftServer
+        .createDraft(body)
+        .then((response) => {
+          authService
+            .updateUser(user._id, { draftOrder: response.data._id })
+            .then((response) => {
+              console.log("new draft id : ", response.data.draftOrder);
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+          console.log("draft response.data._id ", response.data._id);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      return;
+    }
+
+    // Add a null check for draft.products
+    if (!draft.products) {
+      console.log("Draft is null or does not contain products");
+      console.log("draft products", draft);
+      return;
+    }
+
+    // const updateUser = (body) => {
+
+    // };
+
+    const updatedProducts = draft.products.map((product) => {
+      if (product.productId === productId) {
+        return {
+          ...product,
+          selectedSize: selectedSize.name,
+        };
+      }
+      return product;
+    });
+
+    // Add the new product if it doesn't already exist
+    if (!updatedProducts.some((product) => product.productId === productId)) {
+      updatedProducts.push({
+        productId: productId,
+        size: selectedSize.name,
+        quantity: 1,
+      });
+    }
+
+    const updatedDraft = { ...draft, products: updatedProducts };
+
+    draftServer
+      .updateDraft(draft._id, updatedDraft)
+      .then((response) => {
+        console.log("Updated Cart", response.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const getDraft = () => {
+    if (!userInfo || !userInfo.draftOrder) {
+      return;
+    }
+    draftServer
+      .getDraft(userInfo.draftOrder._id)
+      .then((response) => {
+        setDraft(response.data);
+        console.log("draft data from user: ", response.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  // useEffect(() => {
+  //   getProduct();
+  //   if (draftOrder) {
+  //     getDraft();
+  //     // getProduct();
+  //   }
+  // }, []);
 
   useEffect(() => {
     getProduct();
-  }, []);
+    getUser();
+  }, [productId]);
+
+  useEffect(() => {
+    if (draftOrder) {
+      getDraft();
+    }
+  }, [draftOrder, userInfo]);
 
   const reviews = { href: "#", average: 4, totalCount: 117 };
+
   const product = {
     sizes: [
       { name: "50/56", inStock: false },
@@ -91,7 +209,6 @@ const ProductDetails = ({ selectedSize, setSelectedSize, setProductId }) => {
 
           <div className="prodect-info flex flex-col pt-8 ">
             <h1 className="text-3xl tracking-tight text-gray-900 font-light ">
-              {/* Vanilla Nautical 4 Pack Zip Growsuit */}
               {oneProduct.name}
             </h1>
             <p className="mt-4">${oneProduct.price}</p>
@@ -122,7 +239,6 @@ const ProductDetails = ({ selectedSize, setSelectedSize, setProductId }) => {
               </div>
             </div>
             <div className="bg-gray-200 h-[1px] mt-4"></div>
-            {/* Sizing */}
 
             <div className="mt-10">
               <div className="flex items-center justify-between">

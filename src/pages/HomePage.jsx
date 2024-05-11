@@ -15,6 +15,7 @@ const HomePage = () => {
       </h1>
       <ItemSeasonCollections LIMT={8} offSet={0}></ItemSeasonCollections>
       <ItemsCategory></ItemsCategory>
+
       <h1 className="text-4xl tracking-tight text-gray-900 text-center font-light mt-12">
         Season Collections
       </h1>
