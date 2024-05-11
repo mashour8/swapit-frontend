@@ -56,36 +56,36 @@ const ProductDetails = ({ selectedSize, setSelectedSize, setProductId }) => {
 
   const updateCart = () => {
     console.log("draftdraftdraft", draft);
-    if (!draft) {
-      const body = {
-        userId: user._id,
-        products: [
-          {
-            productId: productId,
-            size: selectedSize.name,
-            quantity: 1,
-          },
-        ],
-        orderStatus: "Draft",
-      };
-      draftServer
-        .createDraft(body)
-        .then((response) => {
-          authService
-            .updateUser(user._id, { draftOrder: response.data._id })
-            .then((response) => {
-              console.log("new draft id : ", response.data.draftOrder);
-            })
-            .catch((err) => {
-              console.log(err);
-            });
-          console.log("draft response.data._id ", response.data._id);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-      return;
-    }
+    // if (!draft) {
+    //   const body = {
+    //     userId: user._id,
+    //     products: [
+    //       {
+    //         productId: productId,
+    //         size: selectedSize.name,
+    //         quantity: 1,
+    //       },
+    //     ],
+    //     orderStatus: "Draft",
+    //   };
+    //   draftServer
+    //     .createDraft(body)
+    //     .then((response) => {
+    //       authService
+    //         .updateUser(user._id, { draftOrder: response.data._id })
+    //         .then((response) => {
+    //           console.log("new draft id : ", response.data.draftOrder);
+    //         })
+    //         .catch((err) => {
+    //           console.log(err);
+    //         });
+    //       console.log("draft response.data._id ", response.data._id);
+    //     })
+    //     .catch((err) => {
+    //       console.log(err);
+    //     });
+    //   return;
+    // }
 
     // Add a null check for draft.products
     if (!draft.products) {
