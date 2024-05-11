@@ -10,7 +10,7 @@ const AboutPage = () => {
         Welcome to our Kids Close Online Store! We are dedicated to providing
         high-quality, stylish, and comfortable clothing for children of all
         ages. Our mission is to make shopping for kids' clothes a delightful
-        experience for parents and children alike.
+        experience for parents and children alike..
       </p>
 
       <h2 className="text-2xl font-bold mb-2">Our Story</h2>
