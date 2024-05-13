@@ -10,7 +10,7 @@ function IsPrivate({ children }) {
 
   if (!isLoggedIn) {
     // If the user is not logged in
-    console.log("isLoggedIn Is Private 1: ", isLoggedIn);
+    // console.log("isLoggedIn Is Private 1: ", isLoggedIn);
     return <Navigate to="/login" />;
   } else {
     // If the user is logged in, allow to see the page

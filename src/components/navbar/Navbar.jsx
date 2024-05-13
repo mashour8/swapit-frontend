@@ -11,15 +11,14 @@ import authService from "../../services/users.service";
 const Navbar = () => {
   const { user, isLoggedIn, logOutUser, draftOrder } = useContext(AuthContext);
   const [badgeCounter, setBadgeCounter] = useState(0);
+  const [userInfo, setUserInfo] = useState("");
 
   const getUser = () => {
     authService
       .user(user._id)
       .then((response) => {
-        console.log("usere dasd ", response.data);
-        if (response.data.draftOrder != null) {
-          setBadgeCounter(response.data.draftOrder.products.length);
-        }
+        setUserInfo(response.data);
+        setBadgeCounter(response.data.draftOrder.products.length);
       })
       .catch((err) => {
         console.log(err);
@@ -29,7 +28,7 @@ const Navbar = () => {
     if (user) {
       getUser();
     }
-    setBadgeCounter(0);
+    // setBadgeCounter(0);
   }, [user]);
   return (
     <div className="main">

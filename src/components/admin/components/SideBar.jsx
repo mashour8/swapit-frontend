@@ -57,11 +57,10 @@ export default function SideBar({ children }) {
               <h4 className="font-semibold">{user.name}</h4>
               <span className="text-xs text-gray-600">{user.email}</span>
             </div>
-            <MoreVertical size={20} />
+            <button onClick={logOutUser} to={"/"}>
+              <MoreVertical size={20} />
+            </button>
           </div>
-          <Link onClick={logOutUser} to={"/"}>
-            Logout
-          </Link>
         </div>
       </nav>
       {/* <div className="h-full w-full bg-slate-600">hello</div> */}

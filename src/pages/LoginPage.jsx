@@ -1,44 +1,73 @@
 import imgPlaceholder from "../assets/images/shoes-and-blanket-hanging-from-line.webp";
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/auth.context";
 import authService from "../services/users.service";
 
 const LoginPage = () => {
   const { user, isLoggedIn, isAdmin } = useContext(AuthContext);
-
-  console.log("isLoggedIn loginnnnn :", isLoggedIn);
+  // console.log("isLoggedIn loginnnnn :", isLoggedIn);
 
   const [email, setEmail] = useState("ashour@gmail.com");
   const [password, setPassword] = useState("qwe123Qwe");
   const [errorMessage, setErrorMessage] = useState(null);
-
+  const [newLogin, setNewLogin] = useState(false);
   const navigate = useNavigate();
   const { authenticateUser } = useContext(AuthContext);
 
   const handleEmail = (e) => setEmail(e.target.value);
   const handlePassword = (e) => setPassword(e.target.value);
+  let userInfo = { email, password };
+
+  // const getUser = () => {
+  //   authService
+  //     .login(userInfo)
+  //     .then(async (response) => {
+  //       console.log("login page: ", response.data);
+  //       localStorage.setItem("authToken", response.data.authToken);
+  //       await authenticateUser();
+  //       console.log("isAdmin login:", isAdmin);
+  //     })
+  //     // .then(() => {
+
+  //     //   navigate("/orders");
+  //     // })
+  //     .catch((err) => {
+  //       console.log(err);
+  //       setErrorMessage(err.response.data.message);
+  //     });
+  // };
+
+  const getUser = async () => {
+    try {
+      const response = await authService.login(userInfo);
+      localStorage.setItem("authToken", response.data.authToken);
+      await authenticateUser();
+      console.log("isAdmin login:", isAdmin);
+      setNewLogin(true);
+    } catch (err) {
+      console.log(err);
+      setErrorMessage(err.response.data.message);
+    }
+  };
 
   const handelSubmit = (e) => {
     e.preventDefault();
-    let userInfo = { email, password };
+    getUser();
     // doing it with async
-    authService
-      .login(userInfo)
-      .then(async (response) => {
-        console.log("response.data login page: ", response.data);
-        localStorage.setItem("authToken", response.data.authToken);
-        await authenticateUser();
-        navigate("/admin/products");
-      })
-      // .then(() => {
-      //   navigate("/orders");
-      // })
-      .catch((err) => {
-        console.log(err);
-        setErrorMessage(err.response.data.message);
-      });
   };
+
+  useEffect(() => {
+    if (isLoggedIn !== false) {
+      // Add a conditional check to prevent unnecessary navigation
+      console.log("isAdmin ::", isAdmin);
+      if (isAdmin === true) {
+        navigate("/admin/products");
+      } else {
+        navigate("/");
+      }
+    }
+  }, [newLogin]);
 
   // doing it with .then
   // const handelSubmit = (e) => {

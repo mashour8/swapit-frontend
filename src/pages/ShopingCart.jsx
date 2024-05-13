@@ -166,7 +166,7 @@ const ShopingCart = ({ selectedSize, productId, setProductId }) => {
           draftServer
             .updateDraft(draftOrder, { products: cartUpdt })
             .then((response) => {
-              products(response.data.products);
+              setProducts(response.data.products);
               authenticateUser();
               //recheck
             })
