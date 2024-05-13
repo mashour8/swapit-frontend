@@ -110,14 +110,7 @@ function App() {
                 </IsAnon>
               }
             />
-            <Route
-              path="/login"
-              element={
-                <IsAnon>
-                  <LoginPage />
-                </IsAnon>
-              }
-            />
+            <Route path="/login" element={<LoginPage />} />
             <Route path="/category" element={<CategoryPage />} />
             <Route
               path="/profile"

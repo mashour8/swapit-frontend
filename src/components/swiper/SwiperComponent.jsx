@@ -33,9 +33,9 @@ const SwiperComponent = () => {
       <div className="grid grid-flow-col overflow-x-auto whitespace-nowrap">
         {products &&
           products.map((product) => (
-            <div className="inline-block px-4 py-2" key={product._id}>
+            <div className="px-4 py-2 w-[320px] h-[480px]" key={product._id}>
               <button onClick={() => handelClickItem(product._id)}>
-                <div className="aspect-h-1 aspect-w-1  rounded-md lg:aspect-none group-hover:opacity-75">
+                <div className="aspect-h-1 aspect-w-1 rounded-md lg:aspect-none group-hover:opacity-75">
                   <img
                     src={product.images[0]}
                     alt="Wqw"
