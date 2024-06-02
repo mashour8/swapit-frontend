@@ -71,7 +71,8 @@ const ProductDetails = ({ selectedSize, setSelectedSize, setProductId }) => {
   const updateCart = () => {
     console.log("draftdraftdraft", draft);
     console.log("userInfo ::", userInfo);
-    if (userInfo.draftOrder === null) {
+    if (draft == undefined) {
+      console.log("undefined draft :::???????");
       const body = {
         userId: user._id,
         products: [
