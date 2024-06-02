@@ -32,8 +32,8 @@ const ShopingCart = ({ selectedSize, productId, setProductId }) => {
   };
 
   const getDraftOrder = () => {
-    console.log("userInfo.draftOrder", userInfo.draftOrder);
-    if (!userInfo.draftOrder) {
+    console.log("userInfo.draftOrder", userInfo);
+    if (userInfo.draftOrder == undefined) {
       return;
     }
     let id = userInfo.draftOrder._id;
