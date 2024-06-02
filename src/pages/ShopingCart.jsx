@@ -16,10 +16,29 @@ const ShopingCart = ({ selectedSize, productId, setProductId }) => {
   const [quantity, setQuantity] = useState(1);
   const [productsIds, setProductsIds] = useState([]);
   const [quantities, setQuantities] = useState([]);
+  const [userInfo, setUserInfo] = useState([]);
   const navigate = useNavigate();
+
+  const getUser = () => {
+    authService
+      .user(user._id)
+      .then((response) => {
+        setUserInfo(response.data);
+        getDraftOrder();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   const getDraftOrder = () => {
+    console.log("userInfo.draftOrder", userInfo.draftOrder);
+    if (!userInfo.draftOrder) {
+      return;
+    }
+    let id = userInfo.draftOrder._id;
     draftServer
-      .getDraft(user.draftOrder)
+      .getDraft(id)
       .then(async (response) => {
         setCart(response.data);
         setQuantities(response.data.products.map(() => 1));
@@ -64,11 +83,14 @@ const ShopingCart = ({ selectedSize, productId, setProductId }) => {
   };
 
   useEffect(() => {
-    if (user && draftOrder) {
+    getUser();
+  }, []);
+
+  useEffect(() => {
+    if (userInfo) {
       getDraftOrder();
-      handelCart();
     }
-  }, [user, draftOrder, order]);
+  }, [userInfo]);
 
   useEffect(() => {
     const fetchProducts = async () => {
