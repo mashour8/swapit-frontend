@@ -7,6 +7,8 @@ import productsServer from "../services/prodcuts.service";
 import draftServer from "../services/draft.service";
 import { AuthContext } from "../context/auth.context";
 import authService from "../services/users.service";
+import { Notyf } from "notyf";
+import "notyf/notyf.min.css";
 
 const ProductDetails = ({ selectedSize, setSelectedSize, setProductId }) => {
   const { user, isLoggedIn, draftOrder, authenticateUser } =
@@ -15,12 +17,23 @@ const ProductDetails = ({ selectedSize, setSelectedSize, setProductId }) => {
   const [oneProduct, setOneProduct] = useState(null);
   const [draft, setDraft] = useState(null);
   const [userInfo, setUserInfo] = useState(null);
+  var notyf = new Notyf({
+    position: {
+      x: "right",
+      y: "top",
+    },
+  });
 
   const navigate = useNavigate();
 
   const handelSubmit = () => {
-    if (selectedSize === null) {
+    console.log("selectedSize", selectedSize);
+    if (selectedSize == null) {
+      notyf.error(`please select the Size`);
       return;
+    }
+    if (isLoggedIn == false) {
+      navigate("/login");
     }
     updateCart();
     navigate("/cart");
@@ -31,11 +44,12 @@ const ProductDetails = ({ selectedSize, setSelectedSize, setProductId }) => {
       return;
     }
     const id = user._id;
+    console.log("user:::::", user);
     authService
       .user(id)
       .then((response) => {
         setUserInfo(response.data);
-        setDraft(response.data.draftOrder._id);
+        setDraft(response.data.draftOrder);
         console.log("get user ", response.data);
       })
       .catch((err) => {
@@ -56,7 +70,8 @@ const ProductDetails = ({ selectedSize, setSelectedSize, setProductId }) => {
 
   const updateCart = () => {
     console.log("draftdraftdraft", draft);
-    if (!draftOrder) {
+    console.log("userInfo ::", userInfo);
+    if (userInfo.draftOrder === null) {
       const body = {
         userId: user._id,
         products: [
@@ -134,7 +149,7 @@ const ProductDetails = ({ selectedSize, setSelectedSize, setProductId }) => {
       return;
     }
     draftServer
-      .getDraft(draftOrder)
+      .getDraft(draft)
       .then((response) => {
         setDraft(response.data);
         console.log("draft data from user: ", response.data);
@@ -158,9 +173,9 @@ const ProductDetails = ({ selectedSize, setSelectedSize, setProductId }) => {
   }, [productId]);
 
   useEffect(() => {
-    if (draftOrder) {
-      getDraft();
-    }
+    // if (draftOrder) {
+    //   getDraft();
+    // }
   }, [draftOrder, userInfo]);
 
   const reviews = { href: "#", average: 4, totalCount: 117 };

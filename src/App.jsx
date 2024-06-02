@@ -81,13 +81,11 @@ function App() {
             <Route
               path="/productDetails/:productId"
               element={
-                <IsPrivate>
-                  <ProductDetails
-                    selectedSize={selectedSize}
-                    setSelectedSize={setSelectedSize}
-                    setProductId={setProductId}
-                  />
-                </IsPrivate>
+                <ProductDetails
+                  selectedSize={selectedSize}
+                  setSelectedSize={setSelectedSize}
+                  setProductId={setProductId}
+                />
               }
             />
             <Route

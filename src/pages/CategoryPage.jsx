@@ -3,9 +3,9 @@ import ItemSeasonCollections from "../components/itemsComponents/ItemSeasonColle
 
 const CategoryPage = () => {
   const options = [
-    { value: "chocolate", label: "Chocolate" },
-    { value: "strawberry", label: "Strawberry" },
-    { value: "vanilla", label: "Vanilla" },
+    { value: "0-3m (50/56)", label: "0-3m (50/56)" },
+    { value: "3-6m (62/68)", label: "3-6m (62/68)" },
+    { value: "6-12 (74/80)", label: "6-12 (74/80)" },
   ];
   return (
     <div className="contianer flex flex-col justify-center">
